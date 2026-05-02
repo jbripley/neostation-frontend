@@ -729,6 +729,10 @@ class _SystemCardGridViewState extends State<SystemCardGridView> {
   final Map<String, String?> _themeLogos = {};
   String _lastThemeFolder = '';
 
+  List<List<int>>? _cachedVirtualGrid;
+  int? _cachedGridCols;
+  int? _cachedGridSystemCount;
+
   @override
   void initState() {
     super.initState();
@@ -880,6 +884,10 @@ class _SystemCardGridViewState extends State<SystemCardGridView> {
   @override
   void didUpdateWidget(SystemCardGridView oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.systems != widget.systems ||
+        oldWidget.crossAxisCount != widget.crossAxisCount) {
+      _cachedVirtualGrid = null;
+    }
     if (oldWidget.selectedIndex != widget.selectedIndex) {
       if (mounted && _scrollController.hasClients) {
         _ensureSelectedItemVisibleUniversal();
@@ -960,6 +968,12 @@ class _SystemCardGridViewState extends State<SystemCardGridView> {
   ///
   /// Returns a matrix where each cell [row][col] points to the item index.
   List<List<int>> _buildVirtualGrid(List<SystemInfo> cards, int cols) {
+    if (_cachedVirtualGrid != null &&
+        _cachedGridCols == cols &&
+        _cachedGridSystemCount == cards.length) {
+      return _cachedVirtualGrid!;
+    }
+
     final List<List<int>> grid = [];
 
     // 'Recent Games' cards expand to 3x2 on high-resolution displays.
@@ -1016,6 +1030,9 @@ class _SystemCardGridViewState extends State<SystemCardGridView> {
       }
     }
 
+    _cachedVirtualGrid = grid;
+    _cachedGridCols = cols;
+    _cachedGridSystemCount = cards.length;
     return grid;
   }
 
