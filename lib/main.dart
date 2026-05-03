@@ -123,6 +123,14 @@ class ToggleFullscreenAction extends Action<ToggleFullscreenIntent> {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Increase image cache to prevent system card images from being evicted
+  // when navigating to game lists that load many thumbnails.
+  // Desktop gets more headroom; Android stays conservative for RAM-constrained devices.
+  PaintingBinding.instance.imageCache.maximumSizeBytes =
+      (Platform.isAndroid || Platform.isIOS)
+      ? 150 * 1024 * 1024  // 150 MB — enough for ~30 system cards at 512px
+      : 256 * 1024 * 1024; // 256 MB — desktop has ample RAM
+
   final log = LoggerService.instance;
   await log.init();
   log.i('Starting NeoStation...');
