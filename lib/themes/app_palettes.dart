@@ -90,10 +90,12 @@ class AppPalettes {
   static ThemeData get nordPalette => nord.nordPalette;
   static ThemeData get gruvboxPalette => gruvbox.gruvboxPalette;
   static ThemeData get tokyoNightPalette => tokyo_night.tokyoNightPalette;
-  static ThemeData get solarizedLightPalette => solarized_light.solarizedLightPalette;
+  static ThemeData get solarizedLightPalette =>
+      solarized_light.solarizedLightPalette;
   static ThemeData get oneLightPalette => one_light.oneLightPalette;
   static ThemeData get catppuccinPalette => catppuccin.catppuccinPalette;
-  static ThemeData get solarizedDarkPalette => solarized_dark.solarizedDarkPalette;
+  static ThemeData get solarizedDarkPalette =>
+      solarized_dark.solarizedDarkPalette;
   static ThemeData get palenightPalette => palenight.palenightPalette;
   static ThemeData get horizonPalette => horizon.horizonPalette;
 
@@ -107,11 +109,15 @@ class AppPalettes {
   static dynamic get draculaCustomColors => dracula.DraculaCustomColors();
   static dynamic get nordCustomColors => nord.NordCustomColors();
   static dynamic get gruvboxCustomColors => gruvbox.GruvboxCustomColors();
-  static dynamic get tokyoNightCustomColors => tokyo_night.TokyoNightCustomColors();
-  static dynamic get solarizedLightCustomColors => solarized_light.SolarizedLightCustomColors();
+  static dynamic get tokyoNightCustomColors =>
+      tokyo_night.TokyoNightCustomColors();
+  static dynamic get solarizedLightCustomColors =>
+      solarized_light.SolarizedLightCustomColors();
   static dynamic get oneLightCustomColors => one_light.OneLightCustomColors();
-  static dynamic get catppuccinCustomColors => catppuccin.CatppuccinCustomColors();
-  static dynamic get solarizedDarkCustomColors => solarized_dark.SolarizedDarkCustomColors();
+  static dynamic get catppuccinCustomColors =>
+      catppuccin.CatppuccinCustomColors();
+  static dynamic get solarizedDarkCustomColors =>
+      solarized_dark.SolarizedDarkCustomColors();
   static dynamic get palenightCustomColors => palenight.PalenightCustomColors();
   static dynamic get horizonCustomColors => horizon.HorizonCustomColors();
 
