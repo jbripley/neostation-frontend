@@ -243,6 +243,21 @@ class NotificationService extends ChangeNotifier {
     _safeNotifyListeners();
   }
 
+  /// Closes the WebSocket and cancels timers when the app enters background.
+  /// Unlike [disconnect], auto-reconnect stays enabled so [connect] works on resume.
+  void suspend() {
+    _log.d('NotificationService: suspended (app backgrounded)');
+    _reconnectTimer?.cancel();
+    _reconnectTimer = null;
+    _reconnectAttempts = 0;
+    _stopConnectionMonitoring();
+    _channel?.sink.close(status.goingAway);
+    _channel = null;
+    _isConnected = false;
+    _isConnecting = false;
+    _safeNotifyListeners();
+  }
+
   /// Internal handler for incoming WebSocket messages.
   ///
   /// Routes notifications, missed updates, and heartbeat (ping/pong) events.

@@ -125,27 +125,60 @@ class MusicPlayerService extends ChangeNotifier {
   int get currentIndex => _currentIndex;
   GameModel? get activeTrack => _activeTrack;
 
-  /// Stream emitting the current playback position.
-  Stream<Duration> get onPositionChanged =>
-      Stream.periodic(const Duration(milliseconds: 200), (_) {
-        final isActive = _currentIndex == _activeIndex;
-        return (isActive && _currentHandle != null)
+  bool _isAppActive = true;
+  final _positionController = StreamController<Duration>.broadcast();
+  final _durationController = StreamController<Duration>.broadcast();
+  final _playerStateController = StreamController<bool>.broadcast();
+  Timer? _positionTimer;
+  Timer? _durationTimer;
+  Timer? _playerStateTimer;
+
+  Stream<Duration> get onPositionChanged => _positionController.stream;
+  Stream<Duration> get onDurationChanged => _durationController.stream;
+  Stream<bool> get onPlayerStateChanged => _playerStateController.stream;
+
+  void _startStreamTimers() {
+    _positionTimer?.cancel();
+    _durationTimer?.cancel();
+    _playerStateTimer?.cancel();
+    _positionTimer = Timer.periodic(const Duration(milliseconds: 200), (_) {
+      final isActive = _currentIndex == _activeIndex;
+      _positionController.add(
+        (isActive && _currentHandle != null)
             ? SoLoud.instance.getPosition(_currentHandle!)
-            : Duration.zero;
-      });
-
-  /// Stream emitting the total duration of the active track.
-  Stream<Duration> get onDurationChanged =>
-      Stream.periodic(const Duration(seconds: 1), (_) {
-        final isActive = _currentIndex == _activeIndex;
-        return (isActive && _currentSource != null)
+            : Duration.zero,
+      );
+    });
+    _durationTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      final isActive = _currentIndex == _activeIndex;
+      _durationController.add(
+        (isActive && _currentSource != null)
             ? SoLoud.instance.getLength(_currentSource!)
-            : Duration.zero;
-      });
+            : Duration.zero,
+      );
+    });
+    _playerStateTimer = Timer.periodic(
+      const Duration(milliseconds: 500),
+      (_) => _playerStateController.add(_isPlaying),
+    );
+  }
 
-  /// Stream emitting the playback state (playing/paused).
-  Stream<bool> get onPlayerStateChanged =>
-      Stream.periodic(const Duration(milliseconds: 500), (_) => _isPlaying);
+  void appPaused() {
+    _isAppActive = false;
+    _positionTimer?.cancel();
+    _durationTimer?.cancel();
+    _playerStateTimer?.cancel();
+    _positionTimer = null;
+    _durationTimer = null;
+    _playerStateTimer = null;
+  }
+
+  void appResumed() {
+    if (!_isAppActive) {
+      _isAppActive = true;
+      if (_isInitialized) _startStreamTimers();
+    }
+  }
 
   bool get isStarted => _soloud != null && _soloud!.isInitialized;
 
@@ -187,6 +220,7 @@ class MusicPlayerService extends ChangeNotifier {
       _audioData = AudioData(GetSamplesKind.linear);
 
       _isInitialized = true;
+      _startStreamTimers();
       _initCompleter!.complete();
     } catch (e) {
       _logger.e("Error initializing music player: $e");

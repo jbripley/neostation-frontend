@@ -7,6 +7,7 @@ import '../sync/providers/neo_sync_adapter.dart';
 import '../widgets/plan_welcome_modal.dart';
 import '../widgets/plan_farewell_modal.dart';
 import '../services/game_service.dart';
+import '../services/music_player_service.dart';
 import 'package:provider/provider.dart';
 
 /// Widget that detects when the app returns to the foreground and reactivates the gamepad
@@ -74,7 +75,6 @@ class _AppLifecycleHandlerState extends State<AppLifecycleHandler>
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
 
-    // When the app returns to the foreground (resumed), reactivate gamepad if necessary
     if (state == AppLifecycleState.resumed) {
       await GameService.handleAppResumed();
 
@@ -84,15 +84,18 @@ class _AppLifecycleHandlerState extends State<AppLifecycleHandler>
         context,
         listen: false,
       );
-      // Don't await to prevent blocking app resume
       notificationService.connect().catchError((error) {
         _log.e('Failed to reconnect notifications on app resume: $error');
       });
 
+      MusicPlayerService().appResumed();
+
       await _checkForDataUpdates();
     } else if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden) {
-      // App paused or hidden
+      if (!mounted) return;
+      Provider.of<NotificationService>(context, listen: false).suspend();
+      MusicPlayerService().appPaused();
     }
   }
 
