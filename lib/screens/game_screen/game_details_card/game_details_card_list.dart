@@ -285,8 +285,6 @@ class _GameDetailsCardListState extends State<GameDetailsCardList>
 
     widget.onRegisterRefreshAchievements?.call(refreshAchievements);
 
-    widget.videoController?.addListener(_videoListener);
-
     widget.onToggleVideoMute?.call(_toggleVideoMute);
     widget.onToggleSettings?.call(() {
       _setTab(
@@ -435,9 +433,6 @@ class _GameDetailsCardListState extends State<GameDetailsCardList>
 
     if (oldWidget.videoController != widget.videoController ||
         oldWidget.isSecondaryScreenActive != widget.isSecondaryScreenActive) {
-      oldWidget.videoController?.removeListener(_videoListener);
-      widget.videoController?.addListener(_videoListener);
-
       _applyVideoMuteState();
     }
 
@@ -484,7 +479,6 @@ class _GameDetailsCardListState extends State<GameDetailsCardList>
     _favoriteButtonFocusNode.dispose();
     _scrapeButtonFocusNode.dispose();
     _settingsScrollController.dispose();
-    widget.videoController?.removeListener(_videoListener);
     _achievementsScrollController.dispose();
     super.dispose();
   }
@@ -518,17 +512,6 @@ class _GameDetailsCardListState extends State<GameDetailsCardList>
       _isVideoDelayActive = false;
     });
     if (widget.videoController?.value.isPlaying == true) {
-      widget.videoController?.pause();
-    }
-  }
-
-  void _videoListener() {
-    final showGameInfo = context
-        .read<SqliteConfigProvider>()
-        .config
-        .showGameInfo;
-    // Enforce video pause if the UI overlay preference is disabled.
-    if (!showGameInfo && widget.videoController?.value.isPlaying == true) {
       widget.videoController?.pause();
     }
   }
@@ -788,16 +771,6 @@ class _GameDetailsCardListState extends State<GameDetailsCardList>
       'screenshots',
       widget.fileProvider,
     );
-    final showGameInfo = context
-        .watch<SqliteConfigProvider>()
-        .config
-        .showGameInfo;
-
-    // Safety check: ensure video is paused if the global 'Game Info' overlay is inactive.
-    if (!showGameInfo && widget.videoController?.value.isPlaying == true) {
-      widget.videoController?.pause();
-    }
-
     return Card(
       color: Colors.transparent,
       margin: EdgeInsets.only(left: 8.r),

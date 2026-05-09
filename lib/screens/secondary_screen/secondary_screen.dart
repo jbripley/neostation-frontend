@@ -106,9 +106,13 @@ class _SecondaryScreenState extends State<SecondaryScreen> {
     _videoTimer?.cancel();
     _videoTimer = null;
     if (_videoController != null) {
-      _videoController!.pause();
-      _videoController!.dispose();
+      final controller = _videoController!;
       _videoController = null;
+      try {
+        controller.dispose();
+      } catch (e) {
+        debugPrint('SecondaryScreen: Error disposing video: $e');
+      }
     }
     if (mounted) {
       setState(() {

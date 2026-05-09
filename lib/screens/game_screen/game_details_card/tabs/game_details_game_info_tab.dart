@@ -60,6 +60,9 @@ class _GameDetailsGameInfoTabState extends State<GameDetailsGameInfoTab> {
   /// Local cache for resolved image aspect ratios to prevent jitter during layout.
   final Map<String, double> _imageAspectRatios = {};
 
+  ImageStream? _currentImageStream;
+  ImageStreamListener? _currentImageListener;
+
   /// Asynchronously resolves the intrinsic aspect ratio of a local image file.
   void _loadImageAspectRatio(String path) {
     if (_imageAspectRatios.containsKey(path) || path.isEmpty) return;
@@ -67,21 +70,40 @@ class _GameDetailsGameInfoTabState extends State<GameDetailsGameInfoTab> {
     final File file = File(path);
     if (!file.existsSync()) return;
 
+    // Remove any pending listener from a previous path to avoid leaks.
+    _removeImageListener();
+
     final Image image = Image.file(file);
     final ImageStream stream = image.image.resolve(const ImageConfiguration());
 
-    stream.addListener(
-      ImageStreamListener((ImageInfo info, bool synchronousCall) {
-        if (mounted) {
-          final double aspectRatio = info.image.width / info.image.height;
-          if (aspectRatio > 0 && (_imageAspectRatios[path] != aspectRatio)) {
-            setState(() {
-              _imageAspectRatios[path] = aspectRatio;
-            });
-          }
+    final listener = ImageStreamListener((ImageInfo info, bool synchronousCall) {
+      if (mounted) {
+        final double aspectRatio = info.image.width / info.image.height;
+        if (aspectRatio > 0 && (_imageAspectRatios[path] != aspectRatio)) {
+          setState(() {
+            _imageAspectRatios[path] = aspectRatio;
+          });
         }
-      }),
-    );
+      }
+    });
+
+    stream.addListener(listener);
+    _currentImageStream = stream;
+    _currentImageListener = listener;
+  }
+
+  void _removeImageListener() {
+    if (_currentImageStream != null && _currentImageListener != null) {
+      _currentImageStream!.removeListener(_currentImageListener!);
+      _currentImageStream = null;
+      _currentImageListener = null;
+    }
+  }
+
+  @override
+  void dispose() {
+    _removeImageListener();
+    super.dispose();
   }
 
   @override

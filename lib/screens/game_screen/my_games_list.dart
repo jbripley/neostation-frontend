@@ -374,13 +374,13 @@ class _SystemGamesListState extends State<SystemGamesList> {
     _musicExtractionTimer?.cancel();
 
     if (_videoController != null) {
-      try {
-        _videoController!.pause();
-      } catch (e) {
-        _log.w('Error pausing video in cleanup: $e');
-      }
-      _videoController!.dispose();
+      final controller = _videoController!;
       _videoController = null;
+      try {
+        controller.dispose();
+      } catch (e) {
+        _log.w('Error disposing video controller in cleanup: $e');
+      }
     }
 
     _gamepadNav.dispose();
@@ -461,15 +461,21 @@ class _SystemGamesListState extends State<SystemGamesList> {
     _videoTimer = null;
 
     if (_videoController != null) {
-      _videoController!.pause();
-      _videoController!.dispose();
+      final controller = _videoController!;
       _videoController = null;
+      try {
+        controller.dispose();
+      } catch (e) {
+        _log.w('Error disposing video controller in reset: $e');
+      }
     }
 
-    setState(() {
-      _showVideo = false;
-      _isVideoLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _showVideo = false;
+        _isVideoLoading = false;
+      });
+    }
   }
 
   /// Graceful termination of video resources with state synchronization.
@@ -477,19 +483,20 @@ class _SystemGamesListState extends State<SystemGamesList> {
     _videoTimer?.cancel();
     _videoTimer = null;
 
+    if (_videoController != null) {
+      final controller = _videoController!;
+      _videoController = null;
+      try {
+        controller.dispose();
+      } catch (e) {
+        _log.w('Error disposing video controller: $e');
+      }
+    }
+
     if (mounted) {
       setState(() {
         _showVideo = false;
         _isVideoLoading = false;
-        if (_videoController != null) {
-          try {
-            _videoController!.pause();
-            _videoController!.dispose();
-          } catch (e) {
-            _log.w('Error disposing video controller: $e');
-          }
-          _videoController = null;
-        }
       });
     }
     _updateMusicDucking();
