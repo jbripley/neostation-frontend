@@ -45,7 +45,10 @@ class PaletteSettingsContentState extends State<PaletteSettingsContent> {
   /// Populates the key list based on the total number of available palettes.
   void _initializeKeys() {
     _itemKeys.clear();
-    final paletteProvider = Provider.of<PaletteProvider>(context, listen: false);
+    final paletteProvider = Provider.of<PaletteProvider>(
+      context,
+      listen: false,
+    );
     // Total Items: Native System Theme + Registered Palette Variants.
     final count = paletteProvider.getPaletteList().length + 1;
     for (int i = 0; i < count; i++) {
@@ -61,7 +64,10 @@ class PaletteSettingsContentState extends State<PaletteSettingsContent> {
 
   /// Resolves the total theme count.
   int getItemCount(BuildContext context) {
-    final paletteProvider = Provider.of<PaletteProvider>(context, listen: false);
+    final paletteProvider = Provider.of<PaletteProvider>(
+      context,
+      listen: false,
+    );
     return paletteProvider.getPaletteList().length + 1;
   }
 
@@ -135,7 +141,10 @@ class PaletteSettingsContentState extends State<PaletteSettingsContent> {
 
   /// Persistence Protocol: Updates the active application theme.
   void selectItem(int index) async {
-    final paletteProvider = Provider.of<PaletteProvider>(context, listen: false);
+    final paletteProvider = Provider.of<PaletteProvider>(
+      context,
+      listen: false,
+    );
 
     if (index == 0) {
       // Index 0: Native System/Dynamic palette resolution.
@@ -199,7 +208,8 @@ class PaletteSettingsContentState extends State<PaletteSettingsContent> {
               // State Resolution: Determines if the palette is currently active.
               final isSelected =
                   paletteProvider.currentPaletteName == t['name'] ||
-                  (index == 0 && paletteProvider.currentPaletteName == 'system');
+                  (index == 0 &&
+                      paletteProvider.currentPaletteName == 'system');
 
               // Focus Resolution: Determines if the item is currently highlighted via gamepad.
               final isFocused =

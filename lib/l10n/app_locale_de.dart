@@ -710,9 +710,11 @@ const Map<String, dynamic> appLocaleDe = {
   AppLocale.systemsUpdateAvailable: 'System-Update verfügbar',
   AppLocale.systemsUpdateCurrentVersion: 'Aktuelle Version: {version}',
   AppLocale.systemsUpdateNewVersion: 'Neue Version: {version}',
-  AppLocale.systemsUpdateDownloading: 'System-Configs werden heruntergeladen...',
+  AppLocale.systemsUpdateDownloading:
+      'System-Configs werden heruntergeladen...',
   AppLocale.systemsUpdateComplete: 'Systeme erfolgreich aktualisiert!',
-  AppLocale.systemsUpdateError: 'Fehler beim Aktualisieren der Systeme. Bitte versuche es später.',
+  AppLocale.systemsUpdateError:
+      'Fehler beim Aktualisieren der Systeme. Bitte versuche es später.',
 
   AppLocale.checkingCredentials: 'Anmeldedaten werden überprüft...',
   AppLocale.scrapeNoCredentials:

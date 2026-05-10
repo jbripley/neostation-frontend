@@ -687,7 +687,8 @@ const Map<String, dynamic> appLocaleEn = {
   AppLocale.systemsUpdateNewVersion: 'New version: {version}',
   AppLocale.systemsUpdateDownloading: 'Downloading system configs...',
   AppLocale.systemsUpdateComplete: 'Systems updated successfully!',
-  AppLocale.systemsUpdateError: 'Failed to update systems. Please try again later.',
+  AppLocale.systemsUpdateError:
+      'Failed to update systems. Please try again later.',
 
   AppLocale.checkingCredentials: 'Checking credentials...',
   AppLocale.scrapeNoCredentials:

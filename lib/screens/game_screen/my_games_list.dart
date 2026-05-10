@@ -968,7 +968,10 @@ class _SystemGamesListState extends State<SystemGamesList> {
     final bool hasCustomBg = customBg != null && customBg.isNotEmpty;
     final String? systemBackground = hasCustomBg ? customBg : null;
 
-    final paletteProvider = Provider.of<PaletteProvider>(context, listen: false);
+    final paletteProvider = Provider.of<PaletteProvider>(
+      context,
+      listen: false,
+    );
     final isOled = paletteProvider.isOled;
 
     await _secondaryDisplayState?.updateState(

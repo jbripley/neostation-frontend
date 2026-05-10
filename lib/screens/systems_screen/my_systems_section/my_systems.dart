@@ -640,7 +640,10 @@ class MySystems extends StatelessWidget {
     final String? systemBackground = hasCustomBg ? customBg : null;
     final bool isBackgroundAsset = false;
 
-    final paletteProvider = Provider.of<PaletteProvider>(context, listen: false);
+    final paletteProvider = Provider.of<PaletteProvider>(
+      context,
+      listen: false,
+    );
     final isOled = paletteProvider.isOled;
 
     secondaryState.updateState(
@@ -884,7 +887,10 @@ class _SystemCardGridViewState extends State<SystemCardGridView> {
     final String? themeBg = hasCustomBg ? null : _themeBackgrounds[folder];
     final String? systemBackground = hasCustomBg ? customBg : themeBg;
 
-    final paletteProvider = Provider.of<PaletteProvider>(context, listen: false);
+    final paletteProvider = Provider.of<PaletteProvider>(
+      context,
+      listen: false,
+    );
     final isOled = paletteProvider.isOled;
 
     _secondaryDisplayState?.updateState(

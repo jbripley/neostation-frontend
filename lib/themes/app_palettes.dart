@@ -125,7 +125,10 @@ class AppPalettes {
   static dynamic getCustomColors(BuildContext context) {
     // Prefer detection by palette name if a PaletteProvider is available (more reliable).
     try {
-      final paletteProvider = Provider.of<PaletteProvider>(context, listen: false);
+      final paletteProvider = Provider.of<PaletteProvider>(
+        context,
+        listen: false,
+      );
       final paletteName = paletteProvider.currentPaletteName;
       String resolvedThemeName = paletteName;
 

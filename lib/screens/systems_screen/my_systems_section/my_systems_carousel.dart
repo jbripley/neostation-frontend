@@ -1449,7 +1449,10 @@ class _MySystemsCarouselState extends State<MySystemsCarousel> {
       final String? systemBackground = hasCustomBg ? customBg : themeBg;
       final bool isBackgroundAsset = false;
 
-      final paletteProvider = Provider.of<PaletteProvider>(context, listen: false);
+      final paletteProvider = Provider.of<PaletteProvider>(
+        context,
+        listen: false,
+      );
       final isOled = paletteProvider.isOled;
 
       _secondaryDisplayState?.updateState(

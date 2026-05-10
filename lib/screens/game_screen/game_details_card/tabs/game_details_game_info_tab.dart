@@ -76,7 +76,10 @@ class _GameDetailsGameInfoTabState extends State<GameDetailsGameInfoTab> {
     final Image image = Image.file(file);
     final ImageStream stream = image.image.resolve(const ImageConfiguration());
 
-    final listener = ImageStreamListener((ImageInfo info, bool synchronousCall) {
+    final listener = ImageStreamListener((
+      ImageInfo info,
+      bool synchronousCall,
+    ) {
       if (mounted) {
         final double aspectRatio = info.image.width / info.image.height;
         if (aspectRatio > 0 && (_imageAspectRatios[path] != aspectRatio)) {

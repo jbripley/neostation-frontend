@@ -29,8 +29,12 @@ class _UpdateDialogState extends State<UpdateDialog> {
   void initState() {
     super.initState();
     _gamepadNav = GamepadNavigation(
-      onSelectItem: () { if (!_isDownloading) _startUpdate(); },
-      onBack: () { if (!_isDownloading) Navigator.of(context).pop(false); },
+      onSelectItem: () {
+        if (!_isDownloading) _startUpdate();
+      },
+      onBack: () {
+        if (!_isDownloading) Navigator.of(context).pop(false);
+      },
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -249,7 +253,8 @@ class _UpdateDialogState extends State<UpdateDialog> {
                                     'assets/images/gamepad/Xbox_B_button.png',
                                 label: AppLocale.updateLater.getString(context),
                                 onTap: () => Navigator.of(context).pop(false),
-                                backgroundColor: theme.colorScheme
+                                backgroundColor: theme
+                                    .colorScheme
                                     .surfaceContainerHighest
                                     .withValues(alpha: 0.5),
                                 textColor: theme.colorScheme.onSurface

@@ -1030,10 +1030,7 @@ class SqliteConfigProvider extends ChangeNotifier {
   /// Must be called after external DB updates (e.g., systems update download)
   /// so the next scan uses the latest definitions.
   Future<void> reloadSystemDefinitions() async {
-    await Future.wait([
-      _loadAvailableSystems(),
-      _loadAvailableEmulators(),
-    ]);
+    await Future.wait([_loadAvailableSystems(), _loadAvailableEmulators()]);
     notifyListeners();
   }
 

@@ -167,7 +167,10 @@ class SystemsUpdateService {
         } catch (e) {
           _log.w('SystemsUpdateService: error downloading $fileName: $e');
         }
-        onProgress?.call((i + 1) / total, 'Downloading systems (${ i + 1}/$total)...');
+        onProgress?.call(
+          (i + 1) / total,
+          'Downloading systems (${i + 1}/$total)...',
+        );
       }
 
       if (downloaded == 0) return null;

@@ -24,11 +24,14 @@ class _ThemeSelectionScreenState extends State<ThemeSelectionScreen> {
   final ScrollController _scrollController = ScrollController();
 
   /// Constructs a unified list of available themes including the native system resolver.
-  List<Map<String, String>> _getCombinedThemes(PaletteProvider paletteProvider) {
+  List<Map<String, String>> _getCombinedThemes(
+    PaletteProvider paletteProvider,
+  ) {
     return [
       {
         'name': 'system',
-        'displayName': PaletteProvider.paletteDisplayNames['system'] ?? 'System',
+        'displayName':
+            PaletteProvider.paletteDisplayNames['system'] ?? 'System',
         'logoPath': paletteProvider.getCurrentLogoPath(),
       },
       ...paletteProvider.getPaletteList(),
@@ -38,7 +41,10 @@ class _ThemeSelectionScreenState extends State<ThemeSelectionScreen> {
   @override
   void initState() {
     super.initState();
-    final paletteProvider = Provider.of<PaletteProvider>(context, listen: false);
+    final paletteProvider = Provider.of<PaletteProvider>(
+      context,
+      listen: false,
+    );
     final combinedThemes = _getCombinedThemes(paletteProvider);
 
     // Synchronize the selection index with the active palette state.
@@ -81,7 +87,10 @@ class _ThemeSelectionScreenState extends State<ThemeSelectionScreen> {
     })
     navFunc,
   ) {
-    final paletteProvider = Provider.of<PaletteProvider>(context, listen: false);
+    final paletteProvider = Provider.of<PaletteProvider>(
+      context,
+      listen: false,
+    );
     final combined = _getCombinedThemes(paletteProvider);
     final crossAxisCount = Responsive.getThemesCrossAxisCount(context);
 
@@ -104,7 +113,10 @@ class _ThemeSelectionScreenState extends State<ThemeSelectionScreen> {
 
   /// Persistent state protocol: Applies the selected theme to the application.
   Future<void> _selectThemeByIndex() async {
-    final paletteProvider = Provider.of<PaletteProvider>(context, listen: false);
+    final paletteProvider = Provider.of<PaletteProvider>(
+      context,
+      listen: false,
+    );
     final combined = _getCombinedThemes(paletteProvider);
 
     if (_selectedIndex < combined.length) {

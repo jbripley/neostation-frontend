@@ -142,17 +142,15 @@ class SqliteConfigService {
         activeSyncProvider:
             userConfig?['active_sync_provider']?.toString() ?? 'neosync',
         autoUpdateApp:
-            (int.tryParse(
-                      userConfig?['auto_update_app']?.toString() ?? '1',
-                    ) ??
-                    1) ==
-                1,
+            (int.tryParse(userConfig?['auto_update_app']?.toString() ?? '1') ??
+                1) ==
+            1,
         autoUpdateSystems:
             (int.tryParse(
-                      userConfig?['auto_update_systems']?.toString() ?? '1',
-                    ) ??
-                    1) ==
-                1,
+                  userConfig?['auto_update_systems']?.toString() ?? '1',
+                ) ??
+                1) ==
+            1,
       );
     } catch (e) {
       _log.e('Error applying configuration in loadConfig: $e');

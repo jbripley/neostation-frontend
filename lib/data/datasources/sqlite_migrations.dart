@@ -4201,7 +4201,9 @@ class SqliteMigrations {
 
   /// Migration v80: Add auto_update_app and auto_update_systems to user_config.
   static Future<void> _migrateToVersion80(Database db) async {
-    _log.i('Migration v80: Add auto_update_app and auto_update_systems to user_config');
+    _log.i(
+      'Migration v80: Add auto_update_app and auto_update_systems to user_config',
+    );
     try {
       final tableInfo = db.select('PRAGMA table_info(user_config)');
       final columns = tableInfo.map((c) => c['name'].toString()).toList();
