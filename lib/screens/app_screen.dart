@@ -133,6 +133,7 @@ class AppScreenState extends State<AppScreen> {
   /// Defers until any active ROM scan completes to avoid resource contention.
   Future<void> _runUpdateSequence() async {
     await SystemsUpdateService.initialize();
+    if (!mounted) return;
     try {
       final configProvider = Provider.of<SqliteConfigProvider>(
         context,
