@@ -247,6 +247,7 @@ void main() async {
       MapLocale('pt', AppLocale.pt),
       MapLocale('ru', AppLocale.ru),
       MapLocale('zh', AppLocale.zh),
+      MapLocale('zh_Hant', AppLocale.zhHant),
       MapLocale('fr', AppLocale.fr),
       MapLocale('de', AppLocale.de),
       MapLocale('it', AppLocale.it),

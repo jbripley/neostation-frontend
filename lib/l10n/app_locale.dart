@@ -6,6 +6,7 @@ part 'app_locale_en.dart';
 part 'app_locale_es.dart';
 part 'app_locale_ru.dart';
 part 'app_locale_zh.dart';
+part 'app_locale_zh_hant.dart';
 part 'app_locale_pt.dart';
 part 'app_locale_fr.dart';
 part 'app_locale_de.dart';
@@ -738,6 +739,7 @@ mixin AppLocale {
   static const Map<String, dynamic> es = appLocaleEs;
   static const Map<String, dynamic> ru = appLocaleRu;
   static const Map<String, dynamic> zh = appLocaleZh;
+  static const Map<String, dynamic> zhHant = appLocaleZhHant;
   static const Map<String, dynamic> pt = appLocalePt;
   static const Map<String, dynamic> fr = appLocaleFr;
   static const Map<String, dynamic> de = appLocaleDe;
@@ -751,6 +753,7 @@ mixin AppLocale {
     'es': 'Español',
     'ru': 'Русский',
     'zh': '简体中文',
+    'zh_Hant': '繁體中文',
     'pt': 'Português',
     'fr': 'Français',
     'de': 'Deutsch',
