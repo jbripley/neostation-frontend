@@ -20,6 +20,13 @@ const Color _batteryMedium = Color(0xFFE0AF68);
 const Color _batteryLow = Color(0xFFF7768E);
 const Color _batteryPower = Color(0xFF7DCFFF);
 
+const Color _warningColor = Color(0xFFE0AF68);
+const Color _onWarningColor = Color(0xFF1A1B26);
+const Color _successColor = Color(0xFF9ECE6A);
+const Color _onSuccessColor = Color(0xFF1A1B26);
+const Color _infoColor = Color(0xFF7DCFFF);
+const Color _onInfoColor = Color(0xFF1A1B26);
+
 final ThemeData tokyoNightPalette = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.dark(
@@ -76,4 +83,16 @@ class TokyoNightCustomColors {
   Color get batteryMedium => _batteryMedium;
   Color get batteryLow => _batteryLow;
   Color get batteryPower => _batteryPower;
+
+  Color get errorColor => _errorColor;
+  Color get onErrorColor => _onErrorColor;
+
+  Color get successColor => _successColor;
+  Color get onSuccessColor => _onSuccessColor;
+
+  Color get infoColor => _infoColor;
+  Color get onInfoColor => _onInfoColor;
+
+  Color get warningColor => _warningColor;
+  Color get onWarningColor => _onWarningColor;
 }

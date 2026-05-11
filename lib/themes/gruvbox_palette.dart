@@ -20,6 +20,13 @@ const Color _batteryMedium = Color(0xFFD79921);
 const Color _batteryLow = Color(0xFFCC241D);
 const Color _batteryPower = Color(0xFF458588);
 
+const Color _warningColor = Color(0xFFD79921);
+const Color _onWarningColor = Color(0xFF282828);
+const Color _successColor = Color(0xFF98971A);
+const Color _onSuccessColor = Color(0xFF282828);
+const Color _infoColor = Color(0xFF458588);
+const Color _onInfoColor = Color(0xFF282828);
+
 final ThemeData gruvboxPalette = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.dark(
@@ -76,4 +83,13 @@ class GruvboxCustomColors {
   Color get batteryMedium => _batteryMedium;
   Color get batteryLow => _batteryLow;
   Color get batteryPower => _batteryPower;
+
+  Color get errorColor => _errorColor;
+  Color get onErrorColor => _onErrorColor;
+  Color get successColor => _successColor;
+  Color get onSuccessColor => _onSuccessColor;
+  Color get infoColor => _infoColor;
+  Color get onInfoColor => _onInfoColor;
+  Color get warningColor => _warningColor;
+  Color get onWarningColor => _onWarningColor;
 }

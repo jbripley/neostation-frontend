@@ -20,6 +20,13 @@ const Color _batteryMedium = Color(0xFFF59E0B);
 const Color _batteryLow = Color(0xFFEF4444);
 const Color _batteryPower = Color(0xFF3B82F6);
 
+const Color _warningColor = Color(0xFFF59E0B);
+const Color _onWarningColor = Color(0xFF000000);
+const Color _successColor = Color(0xFF10B981);
+const Color _onSuccessColor = Color(0xFF000000);
+const Color _infoColor = Color(0xFF3B82F6);
+const Color _onInfoColor = Color(0xFF000000);
+
 final ThemeData oledPalette = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.dark(
@@ -76,4 +83,16 @@ class OledCustomColors {
   Color get batteryMedium => _batteryMedium;
   Color get batteryLow => _batteryLow;
   Color get batteryPower => _batteryPower;
+
+  Color get errorColor => _errorColor;
+  Color get onErrorColor => _onErrorColor;
+
+  Color get successColor => _successColor;
+  Color get onSuccessColor => _onSuccessColor;
+
+  Color get infoColor => _infoColor;
+  Color get onInfoColor => _onInfoColor;
+
+  Color get warningColor => _warningColor;
+  Color get onWarningColor => _onWarningColor;
 }

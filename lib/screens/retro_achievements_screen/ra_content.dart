@@ -338,7 +338,7 @@ class _RAContentState extends State<RAContent> {
                 onPressed: raProvider.isLoading ? null : _connectToRA,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: theme.colorScheme.primary,
-                  foregroundColor: Colors.white,
+                  foregroundColor: theme.colorScheme.onPrimary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.r),
                   ),

@@ -20,6 +20,13 @@ const Color _batteryMedium = Color(0xFFF9E2AF);
 const Color _batteryLow = Color(0xFFF38BA8);
 const Color _batteryPower = Color(0xFF89B4FA);
 
+const Color _warningColor = Color(0xFFF9E2AF);
+const Color _onWarningColor = Color(0xFF1E1E2E);
+const Color _successColor = Color(0xFFA6E3A1);
+const Color _onSuccessColor = Color(0xFF1E1E2E);
+const Color _infoColor = Color(0xFF89B4FA);
+const Color _onInfoColor = Color(0xFF1E1E2E);
+
 final ThemeData catppuccinPalette = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.dark(
@@ -76,4 +83,13 @@ class CatppuccinCustomColors {
   Color get batteryMedium => _batteryMedium;
   Color get batteryLow => _batteryLow;
   Color get batteryPower => _batteryPower;
+
+  Color get errorColor => _errorColor;
+  Color get onErrorColor => _onErrorColor;
+  Color get successColor => _successColor;
+  Color get onSuccessColor => _onSuccessColor;
+  Color get infoColor => _infoColor;
+  Color get onInfoColor => _onInfoColor;
+  Color get warningColor => _warningColor;
+  Color get onWarningColor => _onWarningColor;
 }

@@ -6,7 +6,9 @@ const Color _secondaryColor = Color(0xFF2AA198);
 const Color _onSecondaryColor = Color(0xFF002B36);
 const Color _tertiaryColor = Color(0xFF859900);
 const Color _onTertiaryColor = Color(0xFF002B36);
-const Color _surfaceColor = Color(0xFF073642);
+final Color _surfaceColor = HSLColor.fromColor(
+  const Color(0xFF002B36),
+).withLightness(0.25).toColor();
 const Color _onSurfaceColor = Color(0xFF839496);
 const Color _errorColor = Color(0xFFDC322F);
 const Color _onErrorColor = Color(0xFF002B36);
@@ -19,6 +21,13 @@ const Color _batteryFull = Color(0xFF859900);
 const Color _batteryMedium = Color(0xFFB58900);
 const Color _batteryLow = Color(0xFFDC322F);
 const Color _batteryPower = Color(0xFF268BD2);
+
+const Color _warningColor = Color(0xFFB58900);
+const Color _onWarningColor = Color(0xFF002B36);
+const Color _successColor = Color(0xFF859900);
+const Color _onSuccessColor = Color(0xFF002B36);
+const Color _infoColor = Color(0xFF268BD2);
+const Color _onInfoColor = Color(0xFF002B36);
 
 final ThemeData solarizedDarkPalette = ThemeData(
   useMaterial3: true,
@@ -76,4 +85,16 @@ class SolarizedDarkCustomColors {
   Color get batteryMedium => _batteryMedium;
   Color get batteryLow => _batteryLow;
   Color get batteryPower => _batteryPower;
+
+  Color get errorColor => _errorColor;
+  Color get onErrorColor => _onErrorColor;
+
+  Color get successColor => _successColor;
+  Color get onSuccessColor => _onSuccessColor;
+
+  Color get infoColor => _infoColor;
+  Color get onInfoColor => _onInfoColor;
+
+  Color get warningColor => _warningColor;
+  Color get onWarningColor => _onWarningColor;
 }

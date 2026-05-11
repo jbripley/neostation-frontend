@@ -3,6 +3,7 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neostation/l10n/app_locale.dart';
 import 'package:neostation/models/my_systems.dart';
+import 'package:neostation/themes/app_palettes.dart';
 import 'core_footer.dart';
 
 /// Unified footer for the systems grid
@@ -96,6 +97,7 @@ class SystemsGridFooter extends CoreFooter {
   @override
   List<Widget> buildControls(BuildContext context) {
     final theme = Theme.of(context);
+    final customColors = AppPalettes.getCustomColors(context);
 
     return [
       // Settings button (only for real systems, not for the 'All Games' shortcut if desired)
@@ -115,8 +117,8 @@ class SystemsGridFooter extends CoreFooter {
             : AppLocale.enter.getString(context),
         iconPath: 'assets/images/gamepad/Xbox_A_button.png',
         onTap: onEnter,
-        textColor: Colors.white,
-        backgroundColor: const Color(0xFF2ECC71),
+        textColor: customColors.onSuccessColor,
+        backgroundColor: customColors.successColor,
       ),
     ];
   }

@@ -20,6 +20,13 @@ const Color _batteryMedium = Color(0xFFEBCB8B);
 const Color _batteryLow = Color(0xFFBF616A);
 const Color _batteryPower = Color(0xFF88C0D0);
 
+const Color _warningColor = Color(0xFFEBCB8B);
+const Color _onWarningColor = Color(0xFF2E3440);
+const Color _successColor = Color(0xFFA3BE8C);
+const Color _onSuccessColor = Color(0xFF2E3440);
+const Color _infoColor = Color(0xFF88C0D0);
+const Color _onInfoColor = Color(0xFF2E3440);
+
 final ThemeData nordPalette = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.dark(
@@ -76,4 +83,13 @@ class NordCustomColors {
   Color get batteryMedium => _batteryMedium;
   Color get batteryLow => _batteryLow;
   Color get batteryPower => _batteryPower;
+
+  Color get errorColor => _errorColor;
+  Color get onErrorColor => _onErrorColor;
+  Color get successColor => _successColor;
+  Color get onSuccessColor => _onSuccessColor;
+  Color get infoColor => _infoColor;
+  Color get onInfoColor => _onInfoColor;
+  Color get warningColor => _warningColor;
+  Color get onWarningColor => _onWarningColor;
 }

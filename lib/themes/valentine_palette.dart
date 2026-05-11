@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 const Color _primaryColor = Color(0xFFE75A95);
 const Color _onPrimaryColor = Color(0xFFFFFFFF);
-const Color _secondaryColor = Color(0xFFA890FF);
+const Color _secondaryColor = Color(0xFFA193D1);
 const Color _onSecondaryColor = Color(0xFFFFFFFF);
 const Color _tertiaryColor = Color(0xFFE26A9C);
 const Color _onTertiaryColor = Color(0xFFCF5588);
@@ -19,6 +19,13 @@ const Color _batteryFull = Color(0xFF2D8C3C);
 const Color _batteryMedium = Color(0xFFD16003);
 const Color _batteryLow = Color(0xFFDC2626);
 const Color _batteryPower = Color(0xFF0284C7);
+
+const Color _warningColor = Color(0xFFD16003);
+const Color _onWarningColor = Color(0xFFFFFFFF);
+const Color _successColor = Color(0xFF2D8C3C);
+const Color _onSuccessColor = Color(0xFFFFFFFF);
+const Color _infoColor = Color(0xFF0284C7);
+const Color _onInfoColor = Color(0xFFFFFFFF);
 
 final ThemeData valentinePalette = ThemeData(
   useMaterial3: true,
@@ -76,4 +83,13 @@ class ValentineCustomColors {
   Color get batteryMedium => _batteryMedium;
   Color get batteryLow => _batteryLow;
   Color get batteryPower => _batteryPower;
+
+  Color get errorColor => _errorColor;
+  Color get onErrorColor => _onErrorColor;
+  Color get successColor => _successColor;
+  Color get onSuccessColor => _onSuccessColor;
+  Color get infoColor => _infoColor;
+  Color get onInfoColor => _onInfoColor;
+  Color get warningColor => _warningColor;
+  Color get onWarningColor => _onWarningColor;
 }
