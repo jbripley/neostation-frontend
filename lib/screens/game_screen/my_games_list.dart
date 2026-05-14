@@ -1808,10 +1808,13 @@ class _SystemGamesListState extends State<SystemGamesList> {
           _isVideoLoading = false;
         });
 
-        // Initialize playback state: Start muted to prevent sudden audio spikes.
+        // Guard each await: navigation can dispose _videoController between calls.
         await mainController.setVolume(0.0);
+        if (!mounted || _videoController != mainController) return;
         await mainController.setLooping(true);
+        if (!mounted || _videoController != mainController) return;
         await mainController.play();
+        if (!mounted || _videoController != mainController) return;
 
         _updateMusicDucking();
       } else {

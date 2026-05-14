@@ -339,8 +339,12 @@ class LauncherService {
   /// Replaces placeholders in Android-specific launch templates with game data.
   ///
   /// Supported placeholders:
-  /// - `{file.path}` — raw SAF content:// URI or real filesystem path
-  /// - `{file.uri}`  — proper URI: content:// passes through, bare paths become file://
+  /// - `{file.path}`     — raw SAF content:// URI or real filesystem path
+  /// - `{file.uri}`      — proper URI: content:// passes through, bare paths become file://
+  /// - `{file.realpath}` — requests Kotlin to resolve content:// → real filesystem path;
+  ///                       encodes a marker that EmulatorLauncher detects and resolves at launch time
+  /// - `{file.fileuri}`  — requests Kotlin to resolve content:// → file:// URI;
+  ///                       encodes a marker that EmulatorLauncher detects and resolves at launch time
   String resolvePlaceholdersAndroid(String template, GameModel game) {
     if (template.isEmpty) return template;
 
@@ -356,6 +360,16 @@ class LauncherService {
           ? romPath
           : Uri.file(romPath).toString();
       result = result.replaceAll('{file.uri}', uri);
+
+      // Marker-based resolution: Kotlin's EmulatorLauncher detects these prefixes
+      // and resolves the embedded path at launch time — no package-name checks needed.
+      // {file.realpath}    → resolve content:// to real filesystem path (no cache fallback)
+      // {file.fileuri}     → resolve content:// to file:// URI (no cache fallback)
+      // {file.cachedpath}  → resolve content:// to real path; copy to cache if provider
+      //                      cannot be resolved (e.g. network/NAS storage)
+      result = result.replaceAll('{file.realpath}', 'neostation-realpath:$romPath');
+      result = result.replaceAll('{file.fileuri}', 'neostation-fileuri:$romPath');
+      result = result.replaceAll('{file.cachedpath}', 'neostation-cachedpath:$romPath');
 
       if (game.titleId != null) {
         result = result.replaceAll('{tags.steamappid}', game.titleId!);
