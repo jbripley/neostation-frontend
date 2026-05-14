@@ -35,7 +35,7 @@
   "emulators": [
     {
       "name": "Standalone NES.emu",
-      "unique_id": "nes.com.explusalpha.NesEmu",
+      "unique_id": "fc.com.explusalpha.NesEmu",
       "description": "Support extensions: bin, fds, nes, nsf, qd, rom, unf, unif.",
       "is_retroachievements_compatible": false,
       "platforms": {
@@ -46,7 +46,7 @@
     },
     {
       "name": "Standalone NES Emulator",
-      "unique_id": "nes.com.androidemu.nes",
+      "unique_id": "fc.com.androidemu.nes",
       "description": "Support extensions: bin, fds, nes, nsf, qd, rom, unf, unif.",
       "is_retroachievements_compatible": false,
       "platforms": {
