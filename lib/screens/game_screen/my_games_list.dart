@@ -1166,6 +1166,7 @@ class _SystemGamesListState extends State<SystemGamesList> {
       });
 
       _games = sortedGames;
+      _gameIndexMap = {for (int i = 0; i < _games.length; i++) _games[i]: i};
 
       if (oldIndex >= 0 && oldIndex < _games.length) {
         _selectedGameIndex = oldIndex;
@@ -1194,6 +1195,7 @@ class _SystemGamesListState extends State<SystemGamesList> {
         return a.name.compareTo(b.name);
       });
       _games = sortedGames;
+      _gameIndexMap = {for (int i = 0; i < _games.length; i++) _games[i]: i};
 
       final newIndex = _games.indexWhere((g) => g.romname == romname);
       if (newIndex != -1) {
@@ -2544,8 +2546,28 @@ class _SystemGamesListState extends State<SystemGamesList> {
         onShowRandomGame: _showRandomGameDialog,
         onBack: _goBack,
         onGameUpdated: _handleGameUpdated, // Sync UI after metadata edits.
+        onFavoriteToggled: _handleFavoriteToggledFromCard,
       ),
     );
+  }
+
+  /// Called when the card's touch favorite button is pressed.
+  /// The DB toggle already happened in the card; mirror it into _games then resort.
+  void _handleFavoriteToggledFromCard() {
+    if (_selectedGame == null) return;
+    setState(() {
+      final gameIndex = _games.indexWhere(
+        (g) => g.romname == _selectedGame!.romname,
+      );
+      if (gameIndex != -1) {
+        final currentFavorite = _games[gameIndex].isFavorite ?? false;
+        _games[gameIndex] = _games[gameIndex].copyWith(
+          isFavorite: !currentFavorite,
+        );
+        _selectedGame = _games[gameIndex];
+      }
+    });
+    _reorderGamesListKeepingVisualPosition();
   }
 
   /// Synchronizes the selected game's metadata and refreshes the list sorting.
