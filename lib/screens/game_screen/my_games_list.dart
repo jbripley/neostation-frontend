@@ -1064,6 +1064,18 @@ class _SystemGamesListState extends State<SystemGamesList> {
     if (_refreshAchievementsCallback != null) {
       _refreshAchievementsCallback!();
     }
+
+    // Trigger sync after returning from game so local save gets uploaded.
+    if (_selectedGame != null && mounted) {
+      await Future.delayed(const Duration(seconds: 2));
+      if (!mounted) return;
+      try {
+        final syncProvider = context.read<SyncManager>().active!;
+        await syncProvider.detectGameSaveFiles(_selectedGame!);
+      } catch (e) {
+        _log.e('Post-game save sync failed: $e');
+      }
+    }
   }
 
   /// Toggles the 'favorite' status for the selected game and re-sorts the list.
