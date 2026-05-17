@@ -617,37 +617,44 @@ class MainActivity: MultiDisplayFlutterActivity(), GamepadsCompatibleActivity {
         appInfo: ApplicationInfo,
         packageName: String
     ): String {
-        val isSystemApp = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-        if (isSystemApp) return "system"
+        if (isSystemApp(appInfo)) return "system"
+        if (isGameApp(pm, appInfo, packageName)) return "game"
+        return mapAndroidCategory(appInfo.category)
+    }
 
-        val hasGameCategoryFlag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    private fun isSystemApp(appInfo: ApplicationInfo): Boolean {
+        return (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+    }
+
+    private fun isGameApp(
+        pm: PackageManager,
+        appInfo: ApplicationInfo,
+        packageName: String
+    ): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
             appInfo.category == ApplicationInfo.CATEGORY_GAME
-        } else {
-            val gameIntent = Intent(Intent.ACTION_MAIN, null).apply {
-                addCategory(Intent.CATEGORY_GAME)
-                setPackage(packageName)
-            }
-            pm.queryIntentActivities(gameIntent, 0).isNotEmpty()
+        ) {
+            return true
         }
-
-        if (hasGameCategoryFlag) return "game"
 
         val gameIntent = Intent(Intent.ACTION_MAIN, null).apply {
             addCategory(Intent.CATEGORY_GAME)
             setPackage(packageName)
         }
-        if (pm.queryIntentActivities(gameIntent, 0).isNotEmpty()) return "game"
+        return pm.queryIntentActivities(gameIntent, 0).isNotEmpty()
+    }
 
-        return when (appInfo.category) {
-            ApplicationInfo.CATEGORY_AUDIO -> "audio"
-            ApplicationInfo.CATEGORY_VIDEO -> "video"
-            ApplicationInfo.CATEGORY_IMAGE -> "image"
-            ApplicationInfo.CATEGORY_SOCIAL -> "social"
-            ApplicationInfo.CATEGORY_NEWS -> "news"
-            ApplicationInfo.CATEGORY_MAPS -> "maps"
-            ApplicationInfo.CATEGORY_PRODUCTIVITY -> "productivity"
-            else -> "other"
-        }
+    private fun mapAndroidCategory(category: Int): String {
+        val categoryMap = mapOf(
+            ApplicationInfo.CATEGORY_AUDIO to "audio",
+            ApplicationInfo.CATEGORY_VIDEO to "video",
+            ApplicationInfo.CATEGORY_IMAGE to "image",
+            ApplicationInfo.CATEGORY_SOCIAL to "social",
+            ApplicationInfo.CATEGORY_NEWS to "news",
+            ApplicationInfo.CATEGORY_MAPS to "maps",
+            ApplicationInfo.CATEGORY_PRODUCTIVITY to "productivity"
+        )
+        return categoryMap[category] ?: "other"
     }
 
 

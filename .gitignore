@@ -18,6 +18,9 @@ out/
 # Gradle files
 .gradle/
 build/
+android/.gradle/
+android/.kotlin/
+android/**/build/
 
 # Release builds
 /release/
