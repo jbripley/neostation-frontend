@@ -1088,7 +1088,7 @@ class ScreenScraperService {
           appSystemId: appSystemId,
           maxDailyRequests: 0,
           gameName:
-              (systemFolder == 'android' || systemFolder == 'android-games')
+              (systemFolder == 'android' || systemFolder == 'androidgames')
               ? gameName
               : null,
         );
