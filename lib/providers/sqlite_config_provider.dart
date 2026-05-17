@@ -19,6 +19,7 @@ import '../services/systems_update_service.dart';
 import '../models/secondary_display_state.dart';
 import 'package:flutter/services.dart';
 import '../widgets/tv_directory_picker.dart';
+import '../constants/system_folder_names.dart';
 
 /// Provider responsible for managing application configuration and system detection using SQLite as the backend.
 ///
@@ -408,7 +409,7 @@ class SqliteConfigProvider extends ChangeNotifier {
       if (isFastScan) {
         // Only include those that auto-detect or are virtual depending on platform
         final List<String> fastScanFolders = Platform.isAndroid
-            ? ['android']
+            ? [SystemFolderNames.android, SystemFolderNames.androidGames]
             : [];
 
         systemsForMapping = _availableSystems.where((s) {
@@ -424,12 +425,13 @@ class SqliteConfigProvider extends ChangeNotifier {
       // On Android, inject virtual systems (Android Apps/Games) if not detected by folders
       if (Platform.isAndroid) {
         final androidSystems = [
-          {'folder': 'android'},
-          {'folder': 'all'},
+          {'folder': SystemFolderNames.android},
+          {'folder': SystemFolderNames.all},
         ];
 
         for (final sysInfo in androidSystems) {
-          final sysFolder = sysInfo['folder']?.toString() ?? 'android';
+          final sysFolder =
+              sysInfo['folder']?.toString() ?? SystemFolderNames.android;
 
           // If the system was not detected by folder
           if (!detectedSystems.any((s) => s.folderName == sysFolder)) {
@@ -494,7 +496,8 @@ class SqliteConfigProvider extends ChangeNotifier {
           }
 
           // Special case: Android and ALL are always included for scanning
-          if (system.folderName == 'android' || system.folderName == 'all') {
+          if (system.folderName == SystemFolderNames.android ||
+              system.folderName == SystemFolderNames.all) {
             return true;
           }
 
@@ -636,7 +639,13 @@ class SqliteConfigProvider extends ChangeNotifier {
 
       // Count systems with games, excluding virtual/media systems for 'all' logic
       int emulatorSystemsWithGamesCount = 0;
-      final virtualSystems = ['android', 'music', 'all', 'steam'];
+      final virtualSystems = [
+        SystemFolderNames.android,
+        SystemFolderNames.androidGames,
+        SystemFolderNames.music,
+        SystemFolderNames.all,
+        SystemFolderNames.steam,
+      ];
 
       // Build the set of existing folders once for efficient lookup.
       final allExistingFolders = rootFoldersMap.values
@@ -645,7 +654,7 @@ class SqliteConfigProvider extends ChangeNotifier {
 
       // First pass: collect all systems except 'all'
       for (final system in allSystems) {
-        if (system.folderName == 'all') continue;
+        if (system.folderName == SystemFolderNames.all) continue;
 
         final romCount = await SystemRepository.getRomCountForSystem(
           system.id!,
@@ -667,7 +676,9 @@ class SqliteConfigProvider extends ChangeNotifier {
         }
 
         final bool isAndroidVirtual =
-            (system.folderName == 'android' && Platform.isAndroid);
+            ((system.folderName == SystemFolderNames.android ||
+                system.folderName == SystemFolderNames.androidGames) &&
+            Platform.isAndroid);
 
         if (romCount > 0 || hasFolderWhenNonRecursive || isAndroidVirtual) {
           systemsToKeep.add(system.copyWith(romCount: romCount));
@@ -713,7 +724,9 @@ class SqliteConfigProvider extends ChangeNotifier {
   }) async {
     try {
       // Allow scanning for Android system even if no ROM folders are selected
-      if (_config.romFolders.isEmpty && system.folderName != 'android') {
+      if (_config.romFolders.isEmpty &&
+          system.folderName != SystemFolderNames.android &&
+          system.folderName != SystemFolderNames.androidGames) {
         return ScanSummary(
           added: 0,
           removed: 0,
@@ -733,7 +746,7 @@ class SqliteConfigProvider extends ChangeNotifier {
       await refreshSystem(system, rootFoldersMap: rootFoldersMap);
 
       // Trigger Steam scraper if it's the Steam system
-      if (system.folderName == 'steam') {
+      if (system.folderName == SystemFolderNames.steam) {
         // We don't pass 'provider' here because SqliteConfigProvider is not SqliteDatabaseProvider
         // The service will handle UI refreshes independently if needed, or we can look into passing a callback
         SteamScraperService.scrapeSteamGames();
@@ -803,8 +816,10 @@ class SqliteConfigProvider extends ChangeNotifier {
       final bool shouldKeep =
           updatedSystem.romCount > 0 ||
           hasFolderWhenNonRecursive ||
-          (updatedSystem.folderName == 'android' && Platform.isAndroid) ||
-          updatedSystem.folderName == 'all';
+          ((updatedSystem.folderName == SystemFolderNames.android ||
+                  updatedSystem.folderName == SystemFolderNames.androidGames) &&
+              Platform.isAndroid) ||
+          updatedSystem.folderName == SystemFolderNames.all;
 
       if (shouldKeep) {
         await SystemRepository.addDetectedSystem(
@@ -1313,7 +1328,12 @@ class SqliteConfigProvider extends ChangeNotifier {
     final isAsc = _config.systemSortOrder == 'asc';
 
     // Map priority folders that should NEVER be sorted
-    final priorityMap = <String, int>{'all': 1, 'music': 2, 'android': 3};
+    final priorityMap = <String, int>{
+      SystemFolderNames.all: 1,
+      SystemFolderNames.music: 2,
+      SystemFolderNames.android: 3,
+      SystemFolderNames.androidGames: 4,
+    };
 
     _detectedSystems.sort((a, b) {
       final pA = priorityMap[a.folderName] ?? 999;

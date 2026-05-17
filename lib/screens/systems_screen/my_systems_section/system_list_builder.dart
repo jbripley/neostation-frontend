@@ -21,8 +21,10 @@ SystemModel createFavoritesSystem(
   return SystemModel(
     id: existingFavorites?.id ?? SystemFolderNames.favorites,
     folderName: SystemFolderNames.favorites,
-    realName: existingFavorites?.realName ?? AppLocale.favorite.getString(context),
-    iconImage: existingFavorites?.iconImage ?? 'assets/images/icons/heart-bulk.png',
+    realName:
+        existingFavorites?.realName ?? AppLocale.favorite.getString(context),
+    iconImage:
+        existingFavorites?.iconImage ?? 'assets/images/icons/heart-bulk.png',
     color: existingFavorites?.color ?? '#ff006a',
     customBackgroundPath: existingFavorites?.customBackgroundPath,
     customLogoPath: existingFavorites?.customLogoPath,
@@ -75,14 +77,15 @@ List<SystemInfo> buildSystemsList({
       .map((system) {
         final info = SystemInfo.fromSystemMetadata(system);
 
-        if (system.folderName == 'all') {
+        if (system.folderName == SystemFolderNames.all) {
           return info.copyWith(
             numOfRoms: configProvider.totalGames,
             totalStorage: AppLocale.gamesCount
                 .getString(context)
                 .replaceFirst('{count}', configProvider.totalGames.toString()),
           );
-        } else if (system.folderName == 'android') {
+        } else if (system.folderName == SystemFolderNames.android ||
+            system.folderName == SystemFolderNames.androidGames) {
           return info.copyWith(
             totalStorage: AppLocale.appsCount
                 .getString(context)

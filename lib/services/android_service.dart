@@ -1,29 +1,41 @@
 import 'package:flutter/services.dart';
 import 'package:neostation/services/logger_service.dart';
 
-/// Service responsible for interacting with the Android operating system via MethodChannels.
-///
-/// Handles app discovery, package launching, and retrieving native assets
-/// like application icons.
+/// Mirrors native Android app categories used by the method channel scanner.
+enum AndroidAppCategory {
+  game('game'),
+  system('system'),
+  audio('audio'),
+  video('video'),
+  image('image'),
+  social('social'),
+  news('news'),
+  maps('maps'),
+  productivity('productivity'),
+  other('other');
+
+  final String value;
+  const AndroidAppCategory(this.value);
+}
+
 class AndroidService {
-  /// The primary communication channel for Android-specific game operations.
   static const MethodChannel _channel = MethodChannel(
     'com.neogamelab.neostation/game',
   );
 
   static final _log = LoggerService.instance;
 
-  /// Retrieves a list of all installed applications on the device.
-  ///
-  /// Returns a list of maps containing app metadata (label, package name, etc.).
-  /// The [includeSystemApps] flag determines if system-provided apps should be returned.
   static Future<List<Map<String, dynamic>>> getInstalledApps({
-    bool includeSystemApps = false,
+    List<AndroidAppCategory>? includeCategories,
+    List<AndroidAppCategory>? excludeCategories,
   }) async {
     try {
       final List<dynamic> apps = await _channel.invokeMethod(
         'getInstalledApps',
-        {'includeSystemApps': includeSystemApps},
+        {
+          'includeCategories': includeCategories?.map((c) => c.value).toList(),
+          'excludeCategories': excludeCategories?.map((c) => c.value).toList(),
+        },
       );
 
       return apps.map((dynamic item) {
@@ -36,9 +48,6 @@ class AndroidService {
     }
   }
 
-  /// Attempts to launch an Android application using its unique [packageName].
-  ///
-  /// Returns true if the package was successfully opened by the OS.
   static Future<bool> launchPackage(String packageName) async {
     try {
       final bool result = await _channel.invokeMethod('launchPackage', {
@@ -51,9 +60,6 @@ class AndroidService {
     }
   }
 
-  /// Extracts the launcher icon of an application as a [Uint8List] (PNG format).
-  ///
-  /// Returns null if the icon cannot be retrieved or the package is missing.
   static Future<Uint8List?> getAppIcon(String packageName) async {
     try {
       final Uint8List? iconData = await _channel.invokeMethod('getAppIcon', {
@@ -66,7 +72,6 @@ class AndroidService {
     }
   }
 
-  /// Verifies whether an application with the given [packageName] is currently installed.
   static Future<bool> isPackageInstalled(String packageName) async {
     try {
       final bool result = await _channel.invokeMethod('isPackageInstalled', {

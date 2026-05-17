@@ -1087,7 +1087,10 @@ class ScreenScraperService {
           romName,
           appSystemId: appSystemId,
           maxDailyRequests: 0,
-          gameName: (systemFolder == 'android') ? gameName : null,
+          gameName:
+              (systemFolder == 'android' || systemFolder == 'android-games')
+              ? gameName
+              : null,
         );
         if (gameInfoResult != null && gameInfoResult['gameInfo'] != null) break;
         attempts++;

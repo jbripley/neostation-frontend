@@ -1,6 +1,7 @@
 import '../../models/database_game_model.dart';
 import '../../models/system_model.dart';
 import '../../models/emulator_model.dart';
+import '../../constants/system_folder_names.dart';
 import '../../utils/switch_title_extractor.dart';
 import 'sqlite_service.dart';
 import 'sqlite_config_service.dart';
@@ -159,8 +160,19 @@ class SqliteDatabaseService {
   }) async {
     final initialCount = await SqliteService.getRomCountForSystem(system.id!);
 
-    if (Platform.isAndroid && (system.folderName == 'android')) {
-      await _performAndroidSystemScan(system, system.folderName);
+    if (Platform.isAndroid &&
+        (system.folderName == SystemFolderNames.android ||
+            system.folderName == SystemFolderNames.androidGames)) {
+      await _performAndroidSystemScan(
+        system,
+        system.folderName,
+        includeCategories: system.folderName == SystemFolderNames.androidGames
+            ? const [AndroidAppCategory.game]
+            : null,
+        excludeCategories: system.folderName == SystemFolderNames.android
+            ? const [AndroidAppCategory.game, AndroidAppCategory.system]
+            : const [AndroidAppCategory.system],
+      );
       final finalCount = await SqliteService.getRomCountForSystem(system.id!);
       return ScanSummary(
         added: (finalCount - initialCount).clamp(0, 999999),
@@ -702,11 +714,14 @@ class SqliteDatabaseService {
   /// Performs a specialized scan of installed Android applications.
   static Future<List<DatabaseGameModel>> _performAndroidSystemScan(
     SystemModel system,
-    String folderName,
-  ) async {
+    String folderName, {
+    List<AndroidAppCategory>? includeCategories,
+    List<AndroidAppCategory>? excludeCategories,
+  }) async {
     try {
       final installedApps = await AndroidService.getInstalledApps(
-        includeSystemApps: true,
+        includeCategories: includeCategories,
+        excludeCategories: excludeCategories,
       );
       final List<DatabaseGameModel> scannedGames = [];
 
@@ -719,7 +734,13 @@ class SqliteDatabaseService {
             realName: app['name'],
             emulatorName: 'Android',
             systemFolderName: folderName,
-            descriptions: {'en': 'Android Application'},
+            descriptions: {
+              'en':
+                  (includeCategories?.contains(AndroidAppCategory.game) ??
+                      false)
+                  ? 'Installed Android Game'
+                  : 'Android Application',
+            },
           ),
         );
       }

@@ -437,7 +437,7 @@ class MySystems extends StatelessWidget {
     MySystems.isNavigating = true;
 
     try {
-      final selectedSystem = system.folderName == 'all'
+      final selectedSystem = system.folderName == SystemFolderNames.all
           ? _createAllGamesSystem(context, configProvider.detectedSystems)
           : system.folderName == SystemFolderNames.favorites
           ? createFavoritesSystem(context, configProvider.detectedSystems)
@@ -587,9 +587,10 @@ class MySystems extends StatelessWidget {
             MaterialPageRoute(builder: (context) => targetScreen),
           );
         }
-      } else if (systemInfo.folderName == 'android') {
+      } else if (systemInfo.folderName == SystemFolderNames.android ||
+          systemInfo.folderName == SystemFolderNames.androidGames) {
         final systemMeta = configProvider.detectedSystems.firstWhere(
-          (system) => system.folderName == 'android',
+          (system) => system.folderName == systemInfo.folderName,
         );
         if (context.mounted) {
           await Navigator.push(
@@ -642,7 +643,8 @@ class MySystems extends StatelessWidget {
     if (!Platform.isAndroid) return;
 
     final secondaryState = SecondaryDisplayState();
-    final folder = system.primaryFolderName ?? system.folderName ?? 'all';
+    final folder =
+        system.primaryFolderName ?? system.folderName ?? SystemFolderNames.all;
 
     // UI Asset Mapping logic.
     final String? systemLogo = system.isGame
@@ -692,13 +694,13 @@ SystemModel _createAllGamesSystem(
 ) {
   // Resolve settings from an existing 'all' entry if available in persistence.
   final existingAll = detectedSystems.cast<SystemModel?>().firstWhere(
-    (s) => s?.folderName == 'all',
+    (s) => s?.folderName == SystemFolderNames.all,
     orElse: () => null,
   );
 
   return SystemModel(
-    id: 'all',
-    folderName: 'all',
+    id: SystemFolderNames.all,
+    folderName: SystemFolderNames.all,
     realName: existingAll?.realName ?? AppLocale.allSystems.getString(context),
     iconImage: existingAll?.iconImage ?? '/images/icons/folder-bulk.png',
     color: existingAll?.color ?? '#ff006a',
@@ -883,7 +885,8 @@ class _SystemCardGridViewState extends State<SystemCardGridView> {
     final info = system is SystemInfo
         ? system
         : SystemInfo.fromSystemMetadata(system);
-    final folder = info.primaryFolderName ?? info.folderName ?? 'all';
+    final folder =
+        info.primaryFolderName ?? info.folderName ?? SystemFolderNames.all;
 
     final String? customLogo = info.customLogoPath?.isNotEmpty == true
         ? info.customLogoPath

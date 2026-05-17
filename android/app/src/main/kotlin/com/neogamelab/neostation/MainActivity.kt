@@ -160,8 +160,9 @@ class MainActivity: MultiDisplayFlutterActivity(), GamepadsCompatibleActivity {
                 }
 
                 "getInstalledApps" -> {
-                    val includeSystemApps = call.argument<Boolean>("includeSystemApps") ?: false
-                    getInstalledApps(includeSystemApps, result)
+                    val includeCategories = call.argument<List<String>>("includeCategories") ?: emptyList()
+                    val excludeCategories = call.argument<List<String>>("excludeCategories") ?: emptyList()
+                    getInstalledApps(includeCategories, excludeCategories, result)
                 }
                 "launchPackage" -> {
                     val packageName = call.argument<String>("packageName")
@@ -536,10 +537,16 @@ class MainActivity: MultiDisplayFlutterActivity(), GamepadsCompatibleActivity {
 
     // --- NEW ANDROID APPS/GAMES LOGIC (SCAN EVERYTHING) ---
 
-    private fun getInstalledApps(includeSystemApps: Boolean, result: MethodChannel.Result) {
+    private fun getInstalledApps(
+        includeCategories: List<String>,
+        excludeCategories: List<String>,
+        result: MethodChannel.Result
+    ) {
         Thread {
             try {
                 val pm = packageManager
+                val includeSet = includeCategories.map { it.trim().lowercase() }.toSet()
+                val excludeSet = excludeCategories.map { it.trim().lowercase() }.toSet()
                 
                 // Use queryIntentActivities to find ALL launchable apps (Main + Launcher)
                 // This guarantees we see "everything" in the app drawer (Chrome, YouTube, etc.)
@@ -563,11 +570,11 @@ class MainActivity: MultiDisplayFlutterActivity(), GamepadsCompatibleActivity {
                     // Filter out our own app
                     if (packageName == this.packageName) continue
 
-                    val appInfo = activityInfo.applicationInfo 
-                    val isSystemApp = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-                    
-                    // All Android apps are now treated the same
-                    val isGame = false
+                    val appInfo = activityInfo.applicationInfo
+                    val category = resolveAppCategory(pm, appInfo, packageName)
+
+                    if (includeSet.isNotEmpty && !includeSet.contains(category)) continue
+                    if (excludeSet.contains(category)) continue
 
                     val label = resolveInfo.loadLabel(pm).toString()
                     
@@ -582,8 +589,9 @@ class MainActivity: MultiDisplayFlutterActivity(), GamepadsCompatibleActivity {
                     apps.add(mapOf(
                         "name" to label,
                         "package" to packageName,
-                        "isSystemApp" to isSystemApp,
-                        "isGame" to isGame,
+                        "isSystemApp" to (category == "system"),
+                        "isGame" to (category == "game"),
+                        "category" to category,
                         "firstInstallTime" to firstInstallTime,
                         "version" to versionName,
                         "description" to "Android Application ($versionName)"
@@ -602,6 +610,44 @@ class MainActivity: MultiDisplayFlutterActivity(), GamepadsCompatibleActivity {
                 }
             }
         }.start()
+    }
+
+    private fun resolveAppCategory(
+        pm: PackageManager,
+        appInfo: ApplicationInfo,
+        packageName: String
+    ): String {
+        val isSystemApp = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+        if (isSystemApp) return "system"
+
+        val hasGameCategoryFlag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            appInfo.category == ApplicationInfo.CATEGORY_GAME
+        } else {
+            val gameIntent = Intent(Intent.ACTION_MAIN, null).apply {
+                addCategory(Intent.CATEGORY_GAME)
+                setPackage(packageName)
+            }
+            pm.queryIntentActivities(gameIntent, 0).isNotEmpty()
+        }
+
+        if (hasGameCategoryFlag) return "game"
+
+        val gameIntent = Intent(Intent.ACTION_MAIN, null).apply {
+            addCategory(Intent.CATEGORY_GAME)
+            setPackage(packageName)
+        }
+        if (pm.queryIntentActivities(gameIntent, 0).isNotEmpty()) return "game"
+
+        return when (appInfo.category) {
+            ApplicationInfo.CATEGORY_AUDIO -> "audio"
+            ApplicationInfo.CATEGORY_VIDEO -> "video"
+            ApplicationInfo.CATEGORY_IMAGE -> "image"
+            ApplicationInfo.CATEGORY_SOCIAL -> "social"
+            ApplicationInfo.CATEGORY_NEWS -> "news"
+            ApplicationInfo.CATEGORY_MAPS -> "maps"
+            ApplicationInfo.CATEGORY_PRODUCTIVITY -> "productivity"
+            else -> "other"
+        }
     }
 
 

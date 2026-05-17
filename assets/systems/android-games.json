@@ -1,0 +1,33 @@
+{
+  "system": {
+    "id": "android-games",
+    "name": "Android Games",
+    "short_name": "A-Games",
+    "details": {
+      "manufacturer": "Google",
+      "release_date": "2008-09-23",
+      "description": "Installed Android games detected on this device.",
+      "type": "virtual"
+    },
+    "ids": {
+      "screenscraper": 63,
+      "retroachievements": null
+    },
+    "folders": [
+      "android-games"
+    ],
+    "colors": [
+      "#A5D6A7",
+      "#1B5E20"
+    ],
+    "extensions": []
+  },
+  "emulators": [],
+  "neosync": {
+    "sync": false,
+    "android_sync_folder": [],
+    "windows_sync_folder": [],
+    "linux_sync_folder": [],
+    "macos_sync_folder": []
+  }
+}
