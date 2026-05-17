@@ -160,18 +160,14 @@ class SqliteDatabaseService {
   }) async {
     final initialCount = await SqliteService.getRomCountForSystem(system.id!);
 
-    if (Platform.isAndroid &&
-        (system.folderName == SystemFolderNames.android ||
-            system.folderName == SystemFolderNames.androidGames)) {
+    if (Platform.isAndroid && system.folderName == SystemFolderNames.android) {
       await _performAndroidSystemScan(
         system,
         system.folderName,
-        includeCategories: system.folderName == SystemFolderNames.androidGames
-            ? const [AndroidAppCategory.game]
-            : null,
-        excludeCategories: system.folderName == SystemFolderNames.android
-            ? const [AndroidAppCategory.game, AndroidAppCategory.system]
-            : const [AndroidAppCategory.system],
+        excludeCategories: const [
+          AndroidAppCategory.game,
+          AndroidAppCategory.system,
+        ],
       );
       final finalCount = await SqliteService.getRomCountForSystem(system.id!);
       return ScanSummary(
@@ -301,6 +297,18 @@ class SqliteDatabaseService {
     }
 
     stopwatch.stop();
+
+    if (Platform.isAndroid &&
+        system.folderName == SystemFolderNames.androidGames) {
+      await _performAndroidSystemScan(
+        system,
+        system.folderName,
+        includeCategories: const [AndroidAppCategory.game],
+        excludeCategories: const [AndroidAppCategory.system],
+        cleanupOrphans: false,
+      );
+    }
+
     final finalCount = await SqliteService.getRomCountForSystem(system.id!);
     final addedCount = (finalCount - initialCount + removedCount).clamp(
       0,
@@ -717,6 +725,7 @@ class SqliteDatabaseService {
     String folderName, {
     List<AndroidAppCategory>? includeCategories,
     List<AndroidAppCategory>? excludeCategories,
+    bool cleanupOrphans = true,
   }) async {
     try {
       final installedApps = await AndroidService.getInstalledApps(
@@ -745,10 +754,12 @@ class SqliteDatabaseService {
         );
       }
 
-      await _cleanupOrphanedRomsOptimized(
-        system.id!,
-        scannedGames.map((g) => g.romPath).toSet(),
-      );
+      if (cleanupOrphans) {
+        await _cleanupOrphanedRomsOptimized(
+          system.id!,
+          scannedGames.map((g) => g.romPath).toSet(),
+        );
+      }
       await _batchInsertAndroidApps(
         system.folderName,
         scannedGames,

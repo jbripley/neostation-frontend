@@ -14,13 +14,16 @@
       "retroachievements": null
     },
     "folders": [
-      "android-games"
+      "android-games",
+      "androidgames"
     ],
     "colors": [
       "#A5D6A7",
       "#1B5E20"
     ],
-    "extensions": []
+    "extensions": [
+      "app"
+    ]
   },
   "emulators": [],
   "neosync": {
